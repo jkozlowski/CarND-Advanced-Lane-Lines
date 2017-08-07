@@ -23,9 +23,8 @@ The goals / steps of this project are the following:
 [image2]: ./examples/test2.png "Road Transformed"
 [image3]: ./examples/binary_combo_example.png "Binary Example"
 [image4]: ./examples/warped_straight_lines.png "Warp Example"
-[image5]: ./examples/color_fit_lines.jpg "Fit Visual"
-[image6]: ./examples/example_output.jpg "Output"
-[video1]: ./project_video.mp4 "Video"
+[image6]: ./output_images/final.jpg "Output"
+[video1]: ./project_video_result.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
 
@@ -60,7 +59,7 @@ To demonstrate this step, I will describe how I apply the distortion correction 
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
-I used a combination of color and gradient thresholds to generate a binary image (see ```thresholded_binary_image``` function in ```Cell 4```).  Here's an example of my output for this step.  
+I used a combination of color and gradient thresholds to generate a binary image (see ```thresholded_binary_image``` function in ```Cell 4```). Gradient thresholds are taken from the lectures and for color gradients I went back to the first project and pulled out values that roughly correspond to white and yellow lane colors. Here's an example of my output for this step.  
 
 ![alt text][image3]
 
@@ -96,17 +95,15 @@ I verified that my perspective transform was working as expected by drawing the 
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
-
-![alt text][image5]
+The code for this is in Cell 8 in ```Polyfit``` class. I used the code from the lectures (sliding window method) to identify pixels that belong to the left and right lanes. Afterwards, I simply fit a second degree polynomial to get the lane lines.
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines # through # in my code in `my_other_file.py`
+This was done in also in Cell 8 in ```PolyfitDrawer``` class. I simply used the code from the lectures transform from pixel to real world coordinates to estimate the lane curves (I averaged the curves for left and right lanes for the final number). For the car position, I simply calculated the difference between the midpoint of the image (which is where the middle of the car is) and the midpoint between the right and left lanes.
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+The image pipeline is implemented in Cell 10 in ```Pipeline``` class. For every frame, I write the result of all transformations in the pipeline back to disk. Here's an example final output:
 
 ![alt text][image6]
 
@@ -116,7 +113,7 @@ I implemented this step in lines # through # in my code in `yet_another_file.py`
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result](./project_video_result.mp4)
 
 ---
 
@@ -124,4 +121,6 @@ Here's a [link to my video result](./project_video.mp4)
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+I have spent a long time trying to tweak the color mask, until realising that I should try to apply two different masks for yellow and white lanes: without that it was difficult to choose the values.
+
+If I had more time, I could apply similar smoothing techniques I used in the first project to keep a history of past predictions to average out the predictions. However, even without those the result is pretty good.
